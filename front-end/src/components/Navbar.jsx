@@ -25,19 +25,20 @@ export default function Navbar() {
   };
 
   const renderSeller = (
-    <div>
+    <NavBarOrders>
       <Link
-        data-testid="customer_products__element-navbar-link-products"
+        data-testid="customer_products__element-navbar-link-orders"
         to="/seller/orders"
       >
         <p>
           <h3>Pedidos</h3>
         </p>
       </Link>
-    </div>);
+    </NavBarOrders>
+  );
 
   const renderCustomer = (
-    <div>
+    <>
       <NavBarProducs>
         <Link
           data-testid="customer_products__element-navbar-link-products"
@@ -58,7 +59,7 @@ export default function Navbar() {
           </p>
         </Link>
       </NavBarOrders>
-    </div>);
+    </>);
 
   return (
     <NavbarDiv>

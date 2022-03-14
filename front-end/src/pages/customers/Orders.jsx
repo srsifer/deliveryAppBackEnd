@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
+import socket from '../../utils/socketClient';
 import getOrders from '../../services/ApiOrdersService';
 
 export default function Orders() {
@@ -13,6 +14,14 @@ export default function Orders() {
     };
     get();
   }, []);
+
+  const shouldUpdateOrders = orders.length > 0;
+
+  useEffect(() => {
+    socket.on('updatedOrders', (updatedOrders) => {
+      setOrders(updatedOrders);
+    });
+  }, [shouldUpdateOrders]);
 
   return (
     <div>

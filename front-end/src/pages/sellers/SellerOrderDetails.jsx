@@ -5,7 +5,7 @@ import socket from '../../utils/socketClient';
 import getSaleById from '../../services/ApiSalesService';
 
 export default function OrderDetails() {
-  const [sale, setSale] = useState([]);
+  const [order, setOrder] = useState([]);
   const [products, setProducts] = useState([]);
   const params = useParams();
 
@@ -13,7 +13,7 @@ export default function OrderDetails() {
     const get = async () => {
       const { id } = params;
       const response = await getSaleById(id);
-      setSale(response);
+      setOrder(response);
       setProducts(response.products);
     };
     get();
@@ -21,13 +21,13 @@ export default function OrderDetails() {
   }, []);
 
   useEffect(() => {
-    socket.on('newStatus', (newStatus) => {
-      setSale({ ...sale, status: newStatus });
+    socket.on('updatedStatus', ({ status }) => {
+      setOrder({ ...order, status });
     });
-  }, [sale]);
+  }, [order]);
 
   const changeStatus = ({ target: { value: newStatus } }) => {
-    socket.emit('changeStatus', ({ status: newStatus, id: sale.id }));
+    socket.emit('changeStatus', ({ status: newStatus, id: order.id }));
   };
 
   const datId = 'seller_order_details__element-order';
@@ -41,24 +41,24 @@ export default function OrderDetails() {
         <p
           data-testid={ `${datId}-details-label-order-id` }
         >
-          {sale.id}
+          {order.id}
         </p>
         <p
           data-testid={ `${datId}-details-label-order-date` }
         >
-          {sale.saleDate}
+          {order.saleDate}
         </p>
         <p
           data-testid={ `${datId}-details-label-delivery-status` }
         >
-          {sale.status}
+          {order.status}
         </p>
         <button
           type="button"
           data-testid="seller_order_details__button-preparing-check"
           value="Preparando"
           onClick={ (e) => changeStatus(e) }
-          disabled={ sale.status !== 'Pendente' }
+          disabled={ order.status !== 'Pendente' }
         >
           Preparar pedido
         </button>
@@ -67,7 +67,7 @@ export default function OrderDetails() {
           data-testid="seller_order_details__button-dispatch-check"
           value="Em Trânsito"
           onClick={ (e) => changeStatus(e) }
-          disabled={ sale.status !== 'Preparando' }
+          disabled={ order.status !== 'Preparando' }
         >
           Saiu para entrega
         </button>
@@ -119,7 +119,7 @@ export default function OrderDetails() {
       </tbody>
       <p data-testid={ `${datId}-total-price` }>
         {
-          `Total: ${Number(sale.totalPrice)
+          `Total: ${Number(order.totalPrice)
             .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`
         }
       </p>
