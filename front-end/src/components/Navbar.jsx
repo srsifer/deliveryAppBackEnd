@@ -12,7 +12,7 @@ import {
 export default function Navbar() {
   const [redirectOn, setRedirectOn] = useState(false);
   const [userName, setUserName] = useState();
-  const history = useHistory();
+  const { pathname } = useHistory().location;
 
   useEffect(() => {
     const { name } = JSON.parse(localStorage.getItem('user'));
@@ -23,6 +23,19 @@ export default function Navbar() {
     localStorage.clear();
     setRedirectOn(true);
   };
+
+  const renderAdmin = (
+    <NavBarOrders>
+      <Link
+        data-testid="customer_products__element-navbar-link-orders"
+        to="/seller/orders"
+      >
+        <p>
+          <h3>Gerenciar Usuários</h3>
+        </p>
+      </Link>
+    </NavBarOrders>
+  );
 
   const renderSeller = (
     <NavBarOrders>
@@ -61,10 +74,22 @@ export default function Navbar() {
       </NavBarOrders>
     </>);
 
+  const renderByRole = () => {
+    if (pathname.includes('customer')) {
+      return renderCustomer;
+    }
+    if (pathname.includes('seller')) {
+      return renderSeller;
+    }
+    if (pathname.includes('admin')) {
+      return renderAdmin;
+    }
+  };
+
   return (
     <NavbarDiv>
       { redirectOn ? <Redirect to="/login" /> : null }
-      { history.location.pathname.includes('seller') ? renderSeller : renderCustomer}
+      { renderByRole() }
       <NavBarProfile>
         <h3
           data-testid="customer_products__element-navbar-user-full-name"
