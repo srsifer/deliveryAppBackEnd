@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import getProducts from '../services/apiCalls';
+import { getProducts } from '../services/apiCalls';
+
 import ProductCard from './ProductCard';
 // import StyledList from '../Styles/cardsStyle/productListStyle';
 

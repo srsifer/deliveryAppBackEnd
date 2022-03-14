@@ -17,4 +17,24 @@ const getProducts = async () => {
   }
 };
 
-export default getProducts;
+const getUsers = async () => {
+  try {
+    const url = 'http://localhost:3001/adminRegister';
+    const { token } = JSON.parse(localStorage.getItem('user'));
+    const fetchAPI = await axios.get(url, { headers: {
+      // eslint-disable-next-line
+      Authorization: token,
+    },
+    });
+    const response = await fetchAPI.data;
+
+    return response;
+  } catch (error) {
+    return error.message;
+  }
+};
+
+export {
+  getProducts,
+  getUsers,
+};
