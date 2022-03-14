@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import { useHistory, Redirect, Link } from 'react-router-dom';
 
 import {
   NavbarDiv,
@@ -12,6 +12,8 @@ import {
 export default function Navbar() {
   const [redirectOn, setRedirectOn] = useState(false);
   const [userName, setUserName] = useState();
+  const { pathname } = useHistory().location;
+
   useEffect(() => {
     const { name } = JSON.parse(localStorage.getItem('user'));
     setUserName(name);
@@ -22,9 +24,34 @@ export default function Navbar() {
     setRedirectOn(true);
   };
 
-  return (
-    <NavbarDiv>
-      { redirectOn ? <Redirect to="/login" /> : null }
+  const renderAdmin = (
+    <NavBarOrders>
+      <Link
+        data-testid="customer_products__element-navbar-link-orders"
+        to="/seller/orders"
+      >
+        <p>
+          <h3>Gerenciar Usuários</h3>
+        </p>
+      </Link>
+    </NavBarOrders>
+  );
+
+  const renderSeller = (
+    <NavBarOrders>
+      <Link
+        data-testid="customer_products__element-navbar-link-orders"
+        to="/seller/orders"
+      >
+        <p>
+          <h3>Pedidos</h3>
+        </p>
+      </Link>
+    </NavBarOrders>
+  );
+
+  const renderCustomer = (
+    <>
       <NavBarProducs>
         <Link
           data-testid="customer_products__element-navbar-link-products"
@@ -45,6 +72,24 @@ export default function Navbar() {
           </p>
         </Link>
       </NavBarOrders>
+    </>);
+
+  const renderByRole = () => {
+    if (pathname.includes('customer')) {
+      return renderCustomer;
+    }
+    if (pathname.includes('seller')) {
+      return renderSeller;
+    }
+    if (pathname.includes('admin')) {
+      return renderAdmin;
+    }
+  };
+
+  return (
+    <NavbarDiv>
+      { redirectOn ? <Redirect to="/login" /> : null }
+      { renderByRole() }
       <NavBarProfile>
         <h3
           data-testid="customer_products__element-navbar-user-full-name"

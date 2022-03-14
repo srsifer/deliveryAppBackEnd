@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
+import socket from '../../utils/socketClient';
 import getSaleById from '../../services/ApiSalesService';
 
 export default function OrderDetails() {
-  const [sale, setSale] = useState([]);
-  const [names, setNames] = useState([]);
+  const [order, setOrder] = useState([]);
+  const [sellerName, setSellerName] = useState([]);
   const [products, setProducts] = useState([]);
   const params = useParams();
 
@@ -13,16 +14,24 @@ export default function OrderDetails() {
     const get = async () => {
       const { id } = params;
       const response = await getSaleById(id);
-      setSale(response);
-      setNames(response.seller.name);
+      setOrder(response);
+      setSellerName(response.seller.name);
       setProducts(response.products);
     };
     get();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log(names, 'aqui as sales');
-  console.log(sale.status);
+  useEffect(() => {
+    socket.on('updatedStatus', ({ status }) => {
+      setOrder({ ...order, status });
+    });
+  }, [order]);
+
+  const changeStatus = ({ target: { value: newStatus } }) => {
+    socket.emit('changeStatus', ({ status: newStatus, id: order.id }));
+  };
+
   const datId = 'customer_order_details__element-order';
   return (
     <div>
@@ -34,27 +43,29 @@ export default function OrderDetails() {
         <p
           data-testid={ `${datId}-details-label-order-id` }
         >
-          {sale.id}
+          {order.id}
         </p>
         <p
           data-testid={ `${datId}-details-label-seller-name` }
         >
-          {names}
+          {sellerName}
         </p>
         <p
           data-testid={ `${datId}-details-label-order-date` }
         >
-          {sale.saleDate}
+          {order.saleDate}
         </p>
         <p
           data-testid={ `${datId}-details-label-delivery-status` }
         >
-          {sale.status}
+          {order.status}
         </p>
         <button
           type="button"
           data-testid="customer_order_details__button-delivery-check"
-          disabled={ sale.status !== 'entregue' }
+          value="Entregue"
+          onClick={ (e) => changeStatus(e) }
+          disabled={ order.status !== 'Em Trânsito' }
         >
           Marcar como entregue
         </button>
@@ -106,7 +117,7 @@ export default function OrderDetails() {
       </tbody>
       <p data-testid="customer_order_details__element-order-total-price">
         {
-          `Total: ${Number(sale.totalPrice)
+          `Total: ${Number(order.totalPrice)
             .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`
         }
       </p>

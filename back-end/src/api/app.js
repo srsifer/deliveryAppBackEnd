@@ -2,10 +2,18 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 
+const port = process.env.PORT || 3001;
+const app = express();
+const http = require('http').createServer(app);
+
+const io = require('socket.io')(http, {
+    cors: {
+      origin: 'http://localhost:3000', // url aceita pelo cors
+      methods: ['GET', 'POST'], // Métodos aceitos pela url
+    } });
+
 const root = require('../controllers/root');
 const { errorHandler } = require('../middlewares');
-
-const app = express();
 
 app.use(cors());
 
@@ -18,6 +26,9 @@ app.get('/images/:name', async (req, res, _next) => {
 
 app.use(root);
 
+require('../sockets/saleStatus')(io);
+
 app.use(errorHandler);
 
-module.exports = app;
+http.listen(port);
+console.log(`Api rodando na porta ${port}`);

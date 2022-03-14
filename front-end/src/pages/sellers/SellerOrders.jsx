@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
+import socket from '../../utils/socketClient';
 import getOrders from '../../services/ApiOrdersService';
 
 export default function SellerOrders() {
@@ -13,6 +14,14 @@ export default function SellerOrders() {
     };
     get();
   }, []);
+
+  const shouldUpdateOrders = orders.length > 0;
+
+  useEffect(() => {
+    socket.on('updatedOrders', (updatedOrders) => {
+      setOrders(updatedOrders);
+    });
+  }, [shouldUpdateOrders]);
 
   return (
     <div>
@@ -40,8 +49,7 @@ export default function SellerOrders() {
               </p>
             </div>
             <p data-testid={ `seller_orders__element-card-address-${order.id}` }>
-              order.adressa
-              {console.log(order)}
+              { `${order.deliveryAddress}, ${order.deliveryNumber}` }
             </p>
           </Link>
         ))
