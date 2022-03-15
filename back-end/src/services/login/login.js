@@ -23,5 +23,5 @@ module.exports = async (user) => {
   const token = genToken(findUserByEmail);
 
   return { status: StatusCodes.OK,
-     message: { token, users: { ...findUserByEmail, password: null } } };
+     message: { token, user: { ...findUserByEmail, password: null } } };
 };

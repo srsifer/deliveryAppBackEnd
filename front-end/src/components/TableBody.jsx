@@ -2,23 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { changeSubtotalList, updateTotalPrice } from '../redux/slice/productCart';
-// import {
-//   TdIten,
-//   TdDescription,
-//   TdQuantity,
-//   TdUnitPrice,
-//   TdTotalPrice,
-//   TdRemoveItem,
-// } from '../Styles/tablestyles/tableSltyles';
 
-export default function TableBody({ product: {
-  id,
-  name,
-  quantity,
-  price,
-  subtotal,
-}, index }) {
+export default function
+TableBody({ product: { id, name, quantity, price, subtotal }, index }) {
   const dispatch = useDispatch();
+
   const removeProduct = () => {
     dispatch(changeSubtotalList({
       subtotal: 0, id, name, price, quantity: 0,
@@ -27,42 +15,44 @@ export default function TableBody({ product: {
   };
 
   return (
-    <tr>
-      <td
-        data-testid={ `customer_checkout__element-order-table-item-number-${index}` }
-      >
-        {index + 1}
-      </td>
-      <td
-        data-testid={ `customer_checkout__element-order-table-name-${index}` }
-      >
-        {name}
-      </td>
-      <td
-        data-testid={ `customer_checkout__element-order-table-quantity-${index}` }
-      >
-        {quantity}
-      </td>
-      <td
-        data-testid={ `customer_checkout__element-order-table-unit-price-${index}` }
-      >
-        {price.replace('.', ',')}
-      </td>
-      <td
-        data-testid={ `customer_checkout__element-order-table-sub-total-${index}` }
-      >
-        {subtotal.toFixed(2).replace('.', ',')}
-      </td>
-      <td>
-        <button
-          data-testid={ `customer_checkout__element-order-table-remove-${index}` }
-          type="button"
-          onClick={ () => removeProduct() }
+    <tbody>
+      <tr>
+        <td
+          data-testid={ `customer_checkout__element-order-table-item-number-${index}` }
         >
-          Remover
-        </button>
-      </td>
-    </tr>
+          {index + 1}
+        </td>
+        <td
+          data-testid={ `customer_checkout__element-order-table-name-${index}` }
+        >
+          {name}
+        </td>
+        <td
+          data-testid={ `customer_checkout__element-order-table-quantity-${index}` }
+        >
+          {quantity}
+        </td>
+        <td
+          data-testid={ `customer_checkout__element-order-table-unit-price-${index}` }
+        >
+          {price.replace('.', ',')}
+        </td>
+        <td
+          data-testid={ `customer_checkout__element-order-table-sub-total-${index}` }
+        >
+          {subtotal.toFixed(2).replace('.', ',')}
+        </td>
+        <td>
+          <button
+            type="button"
+            onClick={ () => removeProduct() }
+            data-testid={ `customer_checkout__element-order-table-remove-${index}` }
+          >
+            Remover
+          </button>
+        </td>
+      </tr>
+    </tbody>
   );
 }
 

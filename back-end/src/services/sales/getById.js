@@ -9,15 +9,14 @@ const attributes = {
     ],
   };
 
-module.exports = async (id) => {
-  const getSalesById = await Models.sales.findByPk(id, { 
+module.exports = async (orderId) => {
+  const getSalesById = await Models.sales.findByPk(orderId, { 
     attributes,
     include: [
   { model: Models.users, as: 'seller', attributes: { exclude: ['email', 'password'] } },
   { model: Models.users, as: 'user', attributes: { exclude: ['email', 'password'] } },
   { model: Models.products, as: 'products', through: { attributes: ['quantity'] } },
 ] });
-    return { 
-      status: StatusCodes.OK, message: getSalesById,
-     };
+
+  return { status: StatusCodes.OK, message: getSalesById };
 };

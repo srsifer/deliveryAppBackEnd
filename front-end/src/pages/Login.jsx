@@ -1,25 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Link /* useHistory */ } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 import { loginValidation } from '../utils/inputValidations';
-import apiLogin from '../services/ApiLoginServices';
+import { apiLogin } from '../services/apiCalls';
 import {
   LoguinDiv,
   Inputs,
   ButonsSend,
   ButonsRegister,
-} from '../Styles/login/Loguinstyles';
+} from '../styles/login/Loguinstyles';
 
 export default function Login() {
+  const [hiddenOn, setHiddenOn] = useState(true);
+  const [connectionOn, setConnectionOn] = useState();
   const [login, setLogin] = useState({
     email: '',
     password: '',
   });
 
-  const [hiddenOn, setHiddenOn] = useState(true);
-  const [connectionOn, setConnectionOn] = useState();
-
-  // const history = useHistory();
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user !== undefined) {
+      setConnectionOn(user);
+    }
+  }, []);
 
   const validatePassword = ({ target: { name, value } }) => {
     setLogin({ ...login,
@@ -39,60 +43,49 @@ export default function Login() {
     return '/customer/products';
   };
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user !== undefined) {
-      setConnectionOn(user);
-    }
-  }, []);
-
-  const sendLogin = async (data) => {
-    const notExist = 404;
-    const result = await apiLogin(data);
-    if (result === notExist) {
+  const sendLogin = async () => {
+    const response = await apiLogin(login);
+    if (response.error) {
       setHiddenOn(false);
     } else {
-      const { token, users } = result;
-      const UserData = {
-        id: users.id,
-        name: users.name,
-        email: users.email,
-        role: users.role,
-        token,
-      };
-      localStorage.setItem('user', JSON.stringify(UserData));
-      setConnectionOn(users);
+      const { token, user: { id, name, email, role } } = response;
+      const userData = { id, name, email, role, token };
+      localStorage.setItem('user', JSON.stringify(userData));
+      setConnectionOn(userData);
     }
   };
 
   return (
     <LoguinDiv>
+
+      { connectionOn && <Redirect to={ setRedirectPath(connectionOn.role) } /> }
+
       <p
-        data-testid="common_login__element-invalid-email"
         hidden={ hiddenOn }
+        data-testid="common_login__element-invalid-email"
       >
         invalid credential
       </p>
       <div>
         <Inputs
           name="email"
-          onChange={ validatePassword }
           type="text"
-          data-testid="common_login__input-email"
+          onChange={ validatePassword }
           placeholder="Insira seu e-mail"
+          data-testid="common_login__input-email"
         />
         <Inputs
           name="password"
-          onChange={ validatePassword }
           type="password"
-          data-testid="common_login__input-password"
+          onChange={ validatePassword }
           placeholder="Insira sua senha"
+          data-testid="common_login__input-password"
         />
       </div>
       <ButonsSend
-        disabled={ handleLoginValidation() }
-        onClick={ () => sendLogin(login) }
         type="submit"
+        disabled={ handleLoginValidation() }
+        onClick={ () => sendLogin() }
         data-testid="common_login__button-login"
       >
         login
@@ -105,9 +98,6 @@ export default function Login() {
           Ainda não tenho conta
         </ButonsRegister>
       </Link>
-      {
-        connectionOn && <Redirect to={ setRedirectPath(connectionOn.role) } />
-      }
     </LoguinDiv>
   );
 }

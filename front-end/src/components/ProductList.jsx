@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import getProducts from '../services/apiCalls';
+import { getProducts } from '../services/apiCalls';
+
 import ProductCard from './ProductCard';
-// import StyledList from '../Styles/cardsStyle/productListStyle';
 
 export default function ProductList() {
   const [products, setProducts] = useState([]);
@@ -16,18 +16,12 @@ export default function ProductList() {
   }, []);
 
   return (
-    // <StyledList>
     <div>
       {
         products.map((product, index) => (
-          <ProductCard
-            key={ index }
-            product={ product }
-            data-testid={ product.id }
-          />
+          <ProductCard key={ index } product={ product } data-testid={ product.id } />
         ))
       }
     </div>
-    // </StyledList>
   );
 }

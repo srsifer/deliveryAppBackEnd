@@ -1,42 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar';
 import { registerValidation } from '../../utils/inputValidations';
-import registerApi from '../../services/AdminRegisterServices';
+import { apiRegisterByAdmin, getUsers, removeUser } from '../../services/apiCalls';
 
 export default function Management() {
-  const [register, setRegister] = useState({
+  const [hiddenOn, hiddenOnSet] = useState(true);
+  const [usersList, setUsersList] = useState([]);
+  const [newUser, setNewUser] = useState({
     name: '',
     email: '',
     password: '',
     role: 'customer',
   });
 
-  const validatePassword = ({ target: { name, value } }) => {
-    setRegister({ ...register,
-      [name]: value,
-    });
+  const handleChange = ({ target: { name, value } }) => {
+    setNewUser({ ...newUser, [name]: value });
   };
-  const [hiddenOn, setHiddenOn] = useState(true);
-  const [userToken, setUserToken] = useState('');
+
+  const apiCall = async () => {
+    const response = await getUsers();
+    if (response.error) {
+      console.log(response.error);
+    } else {
+      setUsersList(response);
+    }
+  };
 
   useEffect(() => {
-    const { token } = JSON.parse(localStorage.getItem('user'));
-    setUserToken(token);
+    apiCall();
   }, []);
 
   function switchDisabledButton() {
-    const validationError = registerValidation(register).error;
+    const validationError = registerValidation(newUser).error;
     if (validationError) return true;
     return false;
   }
 
-  const sendRegister = async (data, token) => {
-    const conflict = 409;
-    const result = await registerApi(data, token);
-    if (result === conflict) {
-      setHiddenOn(false);
+  const sendRegister = async () => {
+    const response = await apiRegisterByAdmin(newUser);
+    if (response.error) {
+      hiddenOnSet(false);
     } else {
-      setRegister({
+      apiCall();
+      setNewUser({
         name: '',
         email: '',
         password: '',
@@ -45,57 +51,104 @@ export default function Management() {
     }
   };
 
+  const deleteUser = async (id) => {
+    await removeUser(id);
+    await apiCall();
+  };
+
+  const dtId = 'admin_manage__element-user-table';
+
   return (
-    <div>
-      <Navbar />
-      <p
-        data-testid="admin_manage__element-invalid-register"
-        hidden={ hiddenOn }
-      >
-        Person already registered
-      </p>
-      <input
-        name="name"
-        value={ register.name }
-        onChange={ validatePassword }
-        type="text"
-        data-testid="admin_manage__input-name"
-        placeholder="Nome e sobrenome"
-      />
-      <input
-        name="email"
-        value={ register.email }
-        onChange={ validatePassword }
-        type="text"
-        data-testid="admin_manage__input-email"
-        placeholder="E-mail"
-      />
-      <input
-        name="password"
-        value={ register.password }
-        onChange={ validatePassword }
-        type="password"
-        data-testid="admin_manage__input-password"
-        placeholder="Insira sua senha"
-      />
-      <select
-        name="role"
-        value={ register.role }
-        onChange={ validatePassword }
-        data-testid="admin_manage__select-role"
-      >
-        <option value="customer">Cliente</option>
-        <option value="seller">Vendedor</option>
-        <option value="administrator">Admin</option>
-      </select>
-      <button
-        disabled={ switchDisabledButton() }
-        onClick={ () => sendRegister(register, userToken) }
-        type="submit"
-        data-testid="admin_manage__button-register"
-      >
-        Cadastrar
-      </button>
-    </div>
+    <>
+      <div>
+        <Navbar />
+        <p
+          data-testid="admin_manage__element-invalid-register"
+          hidden={ hiddenOn }
+        >
+          Person already registered
+        </p>
+        <input
+          name="name"
+          type="text"
+          value={ newUser.name }
+          onChange={ handleChange }
+          placeholder="Nome e sobrenome"
+          data-testid="admin_manage__input-name"
+        />
+        <input
+          name="email"
+          type="text"
+          value={ newUser.email }
+          onChange={ handleChange }
+          placeholder="E-mail"
+          data-testid="admin_manage__input-email"
+        />
+        <input
+          name="password"
+          type="password"
+          value={ newUser.password }
+          onChange={ handleChange }
+          placeholder="Insira sua senha"
+          data-testid="admin_manage__input-password"
+        />
+        <select
+          name="role"
+          value={ newUser.role }
+          onChange={ handleChange }
+          data-testid="admin_manage__select-role"
+        >
+          <option value="customer">Cliente</option>
+          <option value="seller">Vendedor</option>
+          <option value="administrator">Admin</option>
+        </select>
+        <button
+          type="button"
+          disabled={ switchDisabledButton() }
+          onClick={ () => sendRegister() }
+          data-testid="admin_manage__button-register"
+        >
+          Cadastrar
+        </button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Tipo</th>
+            <th>Excluir</th>
+          </tr>
+        </thead>
+        <tbody>
+          { usersList.map((user, index) => (
+            <tr key={ index }>
+              <td data-testid={ `${dtId}-item-number-${index}` }>
+                {index + 1}
+              </td>
+              <td data-testid={ `${dtId}-name-${index}` }>
+                {user.name}
+              </td>
+              <td data-testid={ `${dtId}-email-${index}` }>
+                {user.email}
+              </td>
+              <td data-testid={ `${dtId}-role-${index}` }>
+                {user.role}
+              </td>
+              <td>
+                <button
+                  type="button"
+                  onClick={ () => deleteUser(user.id) }
+                  data-testid={ `${dtId}-remove-${index}` }
+                >
+                  Excluir
+                </button>
+              </td>
+            </tr>
+          )) }
+        </tbody>
+      </table>
+    </>
   );
 }
