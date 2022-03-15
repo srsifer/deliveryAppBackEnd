@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
+import { getOrderById } from '../../services/apiCalls';
 import socket from '../../utils/socketClient';
-import getSaleById from '../../services/ApiSalesService';
 
 export default function OrderDetails() {
   const [order, setOrder] = useState([]);
@@ -10,13 +10,16 @@ export default function OrderDetails() {
   const params = useParams();
 
   useEffect(() => {
-    const get = async () => {
-      const { id } = params;
-      const response = await getSaleById(id);
-      setOrder(response);
-      setProducts(response.products);
+    const apiCall = async () => {
+      const response = await getOrderById(params.id);
+      if (response.error) {
+        console.log(response.error);
+      } else {
+        setOrder(response);
+        setProducts(response.products);
+      }
     };
-    get();
+    apiCall();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -56,68 +59,67 @@ export default function OrderDetails() {
         </p>
         <button
           type="button"
-          data-testid="seller_order_details__button-preparing-check"
           value="Preparando"
-          onClick={ (e) => changeStatus(e) }
           disabled={ order.status !== 'Pendente' }
+          onClick={ (e) => changeStatus(e) }
+          data-testid="seller_order_details__button-preparing-check"
         >
           Preparar pedido
         </button>
         <button
           type="button"
-          data-testid="seller_order_details__button-dispatch-check"
           value="Em Trânsito"
-          onClick={ (e) => changeStatus(e) }
           disabled={ order.status !== 'Preparando' }
+          onClick={ (e) => changeStatus(e) }
+          data-testid="seller_order_details__button-dispatch-check"
         >
           Saiu para entrega
         </button>
       </div>
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Descrição</th>
-          <th>Quantidade</th>
-          <th>valor Unitarío</th>
-          <th>Sub-total</th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          products.map((product, index) => (
-            <tr key={ index }>
-              <td
-                data-testid={ `${datId}-table-item-number-${index}` }
-              >
-                {index + 1}
-              </td>
-              <td
-                data-testid={ `${datId}-table-name-${index}` }
-              >
-                {product.name}
-              </td>
-              <td
-                data-testid={
-                  `${datId}-table-quantity-${index}`
-                }
-              >
-                {product.salesProducts.quantity}
-              </td>
-              <td
-                data-testid={ `${datId}-table-unit-price-${index}` }
-              >
-                {product.price.replace('.', ',')}
-              </td>
-              <td
-                data-testid={ `${datId}-table-sub-total-${index}` }
-              >
-                {(Number(product.price) * (product.salesProducts.quantity))
-                  .toFixed(2) }
-              </td>
-            </tr>
-          ))
-        }
-      </tbody>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Descrição</th>
+            <th>Quantidade</th>
+            <th>valor Unitarío</th>
+            <th>Sub-total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            products.map((product, index) => (
+              <tr key={ index }>
+                <td
+                  data-testid={ `${datId}-table-item-number-${index}` }
+                >
+                  {index + 1}
+                </td>
+                <td
+                  data-testid={ `${datId}-table-name-${index}` }
+                >
+                  {product.name}
+                </td>
+                <td
+                  data-testid={ `${datId}-table-quantity-${index}` }
+                >
+                  {product.salesProducts.quantity}
+                </td>
+                <td
+                  data-testid={ `${datId}-table-unit-price-${index}` }
+                >
+                  {product.price.replace('.', ',')}
+                </td>
+                <td
+                  data-testid={ `${datId}-table-sub-total-${index}` }
+                >
+                  {(Number(product.price) * (product.salesProducts.quantity)).toFixed(2) }
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
       <p data-testid={ `${datId}-total-price` }>
         {
           `Total: ${Number(order.totalPrice)

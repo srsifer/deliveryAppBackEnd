@@ -1,26 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar';
 import { registerValidation } from '../../utils/inputValidations';
-import { getUsers, removeUser } from '../../services/apiCalls';
-import registerApi from '../../services/AdminRegisterServices';
+import { apiRegisterByAdmin, getUsers, removeUser } from '../../services/apiCalls';
 
 export default function Management() {
   const [hiddenOn, hiddenOnSet] = useState(true);
   const [usersList, setUsersList] = useState([]);
-  const [register, setRegister] = useState({
+  const [newUser, setNewUser] = useState({
     name: '',
     email: '',
     password: '',
     role: 'customer',
   });
 
-  const validatePassword = ({ target: { name, value } }) => {
-    setRegister({ ...register, [name]: value });
+  const handleChange = ({ target: { name, value } }) => {
+    setNewUser({ ...newUser, [name]: value });
   };
 
   const apiCall = async () => {
     const response = await getUsers();
-    setUsersList(response);
+    if (response.error) {
+      console.log(response.error);
+    } else {
+      setUsersList(response);
+    }
   };
 
   useEffect(() => {
@@ -28,18 +31,18 @@ export default function Management() {
   }, []);
 
   function switchDisabledButton() {
-    const validationError = registerValidation(register).error;
+    const validationError = registerValidation(newUser).error;
     if (validationError) return true;
     return false;
   }
 
   const sendRegister = async () => {
-    const response = await registerApi(register);
+    const response = await apiRegisterByAdmin(newUser);
     if (response.error) {
       hiddenOnSet(false);
     } else {
       apiCall();
-      setRegister({
+      setNewUser({
         name: '',
         email: '',
         password: '',
@@ -67,32 +70,32 @@ export default function Management() {
         </p>
         <input
           name="name"
-          value={ register.name }
-          onChange={ validatePassword }
           type="text"
-          data-testid="admin_manage__input-name"
+          value={ newUser.name }
+          onChange={ handleChange }
           placeholder="Nome e sobrenome"
+          data-testid="admin_manage__input-name"
         />
         <input
           name="email"
-          value={ register.email }
-          onChange={ validatePassword }
           type="text"
-          data-testid="admin_manage__input-email"
+          value={ newUser.email }
+          onChange={ handleChange }
           placeholder="E-mail"
+          data-testid="admin_manage__input-email"
         />
         <input
           name="password"
-          value={ register.password }
-          onChange={ validatePassword }
           type="password"
-          data-testid="admin_manage__input-password"
+          value={ newUser.password }
+          onChange={ handleChange }
           placeholder="Insira sua senha"
+          data-testid="admin_manage__input-password"
         />
         <select
           name="role"
-          value={ register.role }
-          onChange={ validatePassword }
+          value={ newUser.role }
+          onChange={ handleChange }
           data-testid="admin_manage__select-role"
         >
           <option value="customer">Cliente</option>
@@ -100,9 +103,9 @@ export default function Management() {
           <option value="administrator">Admin</option>
         </select>
         <button
+          type="button"
           disabled={ switchDisabledButton() }
           onClick={ () => sendRegister() }
-          type="button"
           data-testid="admin_manage__button-register"
         >
           Cadastrar
@@ -135,9 +138,9 @@ export default function Management() {
               </td>
               <td>
                 <button
-                  data-testid={ `${dtId}-remove-${index}` }
                   type="button"
                   onClick={ () => deleteUser(user.id) }
+                  data-testid={ `${dtId}-remove-${index}` }
                 >
                   Excluir
                 </button>

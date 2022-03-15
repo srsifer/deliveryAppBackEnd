@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  Switch,
-  Route,
-  Redirect,
-} from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import Login from '../pages/Login';
 import Products from '../pages/customers/Products';
 import Checkout from '../pages/customers/Checkout';

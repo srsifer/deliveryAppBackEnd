@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
+import { getOrdersByUser } from '../../services/apiCalls';
 import socket from '../../utils/socketClient';
-import getOrders from '../../services/ApiOrdersService';
 
 export default function SellerOrders() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    const get = async () => {
-      const response = await getOrders();
-      setOrders(response);
+    const apiCall = async () => {
+      const response = await getOrdersByUser();
+      if (response.error) {
+        console.log(response.error);
+      } else {
+        setOrders(response);
+      }
     };
-    get();
+    apiCall();
   }, []);
 
   const shouldUpdateOrders = orders.length > 0;
@@ -29,8 +33,8 @@ export default function SellerOrders() {
       {
         orders.map((order, index) => (
           <Link
-            to={ `/seller/orders/${order.id}` }
             key={ index }
+            to={ `/seller/orders/${order.id}` }
           >
             <div
               key={ index }

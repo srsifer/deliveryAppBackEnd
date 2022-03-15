@@ -1,95 +1,88 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { registerValidation } from '../utils/inputValidations';
-import registerApi from '../services/RegisterLoginServices';
+import { apiRegister } from '../services/apiCalls';
 import {
   LoguinDiv,
   Inputs,
   ButonsSend,
-} from '../Styles/login/Loguinstyles';
+} from '../styles/login/Loguinstyles';
 
 export default function RegisterUser() {
-  const [register, setRegister] = useState({
+  const [hiddenOn, setHiddenOn] = useState(true);
+  const [redirectOn, setRedirectOn] = useState(false);
+  const [newUser, setNewUser] = useState({
     name: '',
     email: '',
     password: '',
     role: 'customer',
   });
 
-  const [hiddenOn, setHiddenOn] = useState(true);
-  const [redirectOn, setRedirectOn] = useState(false);
-
-  const validatePassword = ({ target: { name, value } }) => {
-    setRegister({ ...register,
-      [name]: value,
-    });
+  const handleChange = ({ target: { name, value } }) => {
+    setNewUser({ ...newUser, [name]: value });
   };
 
   function switchDisabledButton() {
-    const validationError = registerValidation(register).error;
+    const validationError = registerValidation(newUser).error;
     if (validationError) return true;
     return false;
   }
 
-  const sendRegister = async (data) => {
-    const notExist = 404;
-    const result = await registerApi(data);
-    if (result === notExist) {
+  const sendRegister = async () => {
+    const response = await apiRegister(newUser);
+    if (response.error) {
       setHiddenOn(false);
     } else {
-      const { token, users } = result;
-      const UserData = {
-        id: users.id,
-        name: users.name,
-        email: users.email,
-        role: users.role,
-        token,
-      };
-      localStorage.setItem('user', JSON.stringify(UserData));
+      const { token, user: { id, name, email, role } } = response;
+      const userData = { id, name, email, role, token };
+      localStorage.setItem('user', JSON.stringify(userData));
       setRedirectOn(true);
     }
   };
 
   return (
     <LoguinDiv>
+
+      { redirectOn ? <Redirect to="/customer/products" /> : null }
+
       <p
-        data-testid="common_register__element-invalid_register"
         hidden={ hiddenOn }
+        data-testid="common_register__element-invalid_register"
       >
         invalid credential
       </p>
       <Inputs
         name="name"
-        onChange={ validatePassword }
         type="name"
-        data-testid="common_register__input-name"
+        value={ newUser.name }
+        onChange={ handleChange }
         placeholder="Insira um nome"
+        data-testid="common_register__input-name"
       />
       <Inputs
         name="email"
-        onChange={ validatePassword }
         type="text"
-        data-testid="common_register__input-email"
+        value={ newUser.email }
+        onChange={ handleChange }
         placeholder="Insira um e-email"
+        data-testid="common_register__input-email"
       />
       <Inputs
         name="password"
-        onChange={ validatePassword }
         type="password"
-        data-testid="common_register__input-password"
+        value={ newUser.password }
+        onChange={ handleChange }
         placeholder="Insira uma senha"
+        data-testid="common_register__input-password"
       />
       <ButonsSend
         type="submit"
-        data-testid="common_register__button-register"
         disabled={ switchDisabledButton() }
-        onClick={ () => sendRegister(register) }
+        onClick={ () => sendRegister() }
+        data-testid="common_register__button-register"
       >
         register now
       </ButonsSend>
-      {
-        redirectOn ? <Redirect to="/customer/products" /> : null
-      }
     </LoguinDiv>
   );
 }

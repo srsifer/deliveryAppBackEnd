@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const NavbarDiv = styled.p`
+export const NavbarDiv = styled.div`
   color: white;
   top: 0 !important;
   position: relative !important;
@@ -16,7 +16,7 @@ export const NavbarDiv = styled.p`
   align-items: stretch;
 `;
 
-export const NavBarProducs = styled.p`
+export const NavBarProducs = styled.div`
   background-color: #2fc18c;
   width: 20%;
   display: flex;
@@ -25,7 +25,7 @@ export const NavBarProducs = styled.p`
   align-items: stretch;
 `;
 
-export const NavBarOrders = styled.p`
+export const NavBarOrders = styled.div`
   background-color: #036b52;
   width: 50%;
   display: flex;
@@ -34,7 +34,7 @@ export const NavBarOrders = styled.p`
   align-items: stretch;
 `;
 
-export const NavBarProfile = styled.p`
+export const NavBarProfile = styled.div`
   background-color: #421891;
   width: 20%;
   display: flex;
@@ -43,7 +43,7 @@ export const NavBarProfile = styled.p`
   align-items: stretch;
 `;
 
-export const NavBarCheckout = styled.p`
+export const NavBarCheckout = styled.div`
   width: 10%;
   background-color: #056cf9;
   display: flex;

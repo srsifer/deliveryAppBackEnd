@@ -7,7 +7,7 @@ import {
   NavBarOrders,
   NavBarProfile,
   NavBarCheckout,
-} from '../Styles/navBarStyles/NavBarStyles';
+} from '../styles/navBarStyles/NavBarStyles';
 
 export default function Navbar() {
   const [redirectOn, setRedirectOn] = useState(false);
@@ -26,12 +26,8 @@ export default function Navbar() {
 
   const renderAdmin = (
     <NavBarOrders>
-      <div
-        data-testid="customer_products__element-navbar-link-orders"
-      >
-        <p>
-          <h3>Gerenciar Usuários</h3>
-        </p>
+      <div data-testid="customer_products__element-navbar-link-orders">
+        <h3>Gerenciar Usuários</h3>
       </div>
     </NavBarOrders>
   );
@@ -39,12 +35,10 @@ export default function Navbar() {
   const renderSeller = (
     <NavBarOrders>
       <Link
-        data-testid="customer_products__element-navbar-link-orders"
         to="/seller/orders"
+        data-testid="customer_products__element-navbar-link-orders"
       >
-        <p>
-          <h3>Pedidos</h3>
-        </p>
+        <h3>Pedidos</h3>
       </Link>
     </NavBarOrders>
   );
@@ -53,22 +47,18 @@ export default function Navbar() {
     <>
       <NavBarProducs>
         <Link
-          data-testid="customer_products__element-navbar-link-products"
           to="/customer/products"
+          data-testid="customer_products__element-navbar-link-products"
         >
-          <p>
-            <h3>produtos</h3>
-          </p>
+          <h3>Produtos</h3>
         </Link>
       </NavBarProducs>
       <NavBarOrders>
         <Link
-          data-testid="customer_products__element-navbar-link-orders"
           to="/customer/orders"
+          data-testid="customer_products__element-navbar-link-orders"
         >
-          <p>
-            <h3>meus pedidos</h3>
-          </p>
+          <h3>Meus Pedidos</h3>
         </Link>
       </NavBarOrders>
     </>);
@@ -87,20 +77,20 @@ export default function Navbar() {
 
   return (
     <NavbarDiv>
+
       { redirectOn ? <Redirect to="/login" /> : null }
       { renderByRole() }
+
       <NavBarProfile>
-        <h3
-          data-testid="customer_products__element-navbar-user-full-name"
-        >
+        <h3 data-testid="customer_products__element-navbar-user-full-name">
           {userName}
         </h3>
       </NavBarProfile>
       <NavBarCheckout>
         <button
-          data-testid="customer_products__element-navbar-link-logout"
           type="button"
           onClick={ () => clearAndRedirect() }
+          data-testid="customer_products__element-navbar-link-logout"
         >
           sair
         </button>
