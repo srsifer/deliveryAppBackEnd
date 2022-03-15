@@ -1,16 +1,14 @@
 import axios from 'axios';
 
-const notExist = 404;
-
-async function apiRegister(register) {
+async function apiRegister(newUser) {
   try {
     const url = 'http://localhost:3001/register';
-
-    const fetchAPI = await axios.post(url, register);
-    const response = await fetchAPI.data;
+    const fetchAPI = await axios.post(url, newUser);
+    const response = fetchAPI.data;
+    console.log(response);
     return response;
   } catch (error) {
-    return notExist;
+    return error.message;
   }
 }
 

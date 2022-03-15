@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar';
 import { registerValidation } from '../../utils/inputValidations';
-import { getUsers } from '../../services/apiCalls';
+import { getUsers, removeUser } from '../../services/apiCalls';
 import registerApi from '../../services/AdminRegisterServices';
 
 export default function Management() {
-  const [hiddenOn, setHiddenOn] = useState(true);
-  const [userToken, setUserToken] = useState('');
+  const [hiddenOn, hiddenOnSet] = useState(true);
   const [usersList, setUsersList] = useState([]);
   const [register, setRegister] = useState({
     name: '',
@@ -16,20 +15,16 @@ export default function Management() {
   });
 
   const validatePassword = ({ target: { name, value } }) => {
-    setRegister({ ...register,
-      [name]: value,
-    });
+    setRegister({ ...register, [name]: value });
+  };
+
+  const apiCall = async () => {
+    const response = await getUsers();
+    setUsersList(response);
   };
 
   useEffect(() => {
-    const { token } = JSON.parse(localStorage.getItem('user'));
-
-    const apiCall = async () => {
-      const response = await getUsers();
-      setUsersList(response);
-    };
     apiCall();
-    setUserToken(token);
   }, []);
 
   function switchDisabledButton() {
@@ -38,12 +33,12 @@ export default function Management() {
     return false;
   }
 
-  const sendRegister = async (data, token) => {
-    const conflict = 409;
-    const result = await registerApi(data, token);
-    if (result === conflict) {
-      setHiddenOn(false);
+  const sendRegister = async () => {
+    const response = await registerApi(register);
+    if (response.error) {
+      hiddenOnSet(false);
     } else {
+      apiCall();
       setRegister({
         name: '',
         email: '',
@@ -51,6 +46,11 @@ export default function Management() {
         role: 'customer',
       });
     }
+  };
+
+  const deleteUser = async (id) => {
+    await removeUser(id);
+    await apiCall();
   };
 
   const dtId = 'admin_manage__element-user-table';
@@ -101,8 +101,8 @@ export default function Management() {
         </select>
         <button
           disabled={ switchDisabledButton() }
-          onClick={ () => sendRegister(register, userToken) }
-          type="submit"
+          onClick={ () => sendRegister() }
+          type="button"
           data-testid="admin_manage__button-register"
         >
           Cadastrar
@@ -133,9 +133,11 @@ export default function Management() {
               <td data-testid={ `${dtId}-role-${index}` }>
                 {user.role}
               </td>
-              <td data-testid={ `${dtId}-remove-${index}` }>
+              <td>
                 <button
+                  data-testid={ `${dtId}-remove-${index}` }
                   type="button"
+                  onClick={ () => deleteUser(user.id) }
                 >
                   Excluir
                 </button>
