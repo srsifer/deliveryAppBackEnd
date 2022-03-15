@@ -26,14 +26,13 @@ export default function Navbar() {
 
   const renderAdmin = (
     <NavBarOrders>
-      <Link
+      <div
         data-testid="customer_products__element-navbar-link-orders"
-        to="/seller/orders"
       >
         <p>
           <h3>Gerenciar Usuários</h3>
         </p>
-      </Link>
+      </div>
     </NavBarOrders>
   );
 

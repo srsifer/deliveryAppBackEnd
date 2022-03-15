@@ -27,7 +27,8 @@ export default function OrderDetails() {
   }, [order]);
 
   const changeStatus = ({ target: { value: newStatus } }) => {
-    socket.emit('changeStatus', ({ status: newStatus, id: order.id }));
+    const { id: userId } = JSON.parse(localStorage.getItem('user'));
+    socket.emit('changeStatus', ({ userId, orderId: order.id, status: newStatus }));
   };
 
   const datId = 'seller_order_details__element-order';
