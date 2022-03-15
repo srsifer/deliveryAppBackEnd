@@ -1,9 +1,9 @@
 const create = require('./create');
-const getSales = require('./getSales');
-const getSalesById = require('./getSalesById');
+const getByUser = require('./getByUser');
+const getById = require('./getById');
 
 module.exports = {
   create,
-  getSales,
-  getSalesById,
+  getByUser,
+  getById,
 };

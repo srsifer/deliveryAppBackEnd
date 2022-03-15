@@ -26,5 +26,5 @@ module.exports = async (user) => {
 
     const newRegister = await Models.users.create({ name, email, password: passwordHash, role });
     return { status: StatusCodes.CREATED,
-        message: { token, users: newRegister.dataValues } };
+        message: { token, user: newRegister.dataValues } };
 };
