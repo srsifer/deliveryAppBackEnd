@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar';
 import { registerValidation } from '../../utils/inputValidations';
 import { apiRegisterByAdmin, getUsers, removeUser } from '../../services/apiCalls';
+import ManagementUsersTable from '../../components/adm/ManagementUsersTable';
 
 export default function Management() {
   const [hiddenOn, hiddenOnSet] = useState(true);
@@ -56,8 +57,6 @@ export default function Management() {
     await apiCall();
   };
 
-  const dtId = 'admin_manage__element-user-table';
-
   return (
     <>
       <div>
@@ -111,44 +110,10 @@ export default function Management() {
           Cadastrar
         </button>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Item</th>
-            <th>Nome</th>
-            <th>E-mail</th>
-            <th>Tipo</th>
-            <th>Excluir</th>
-          </tr>
-        </thead>
-        <tbody>
-          { usersList.map((user, index) => (
-            <tr key={ index }>
-              <td data-testid={ `${dtId}-item-number-${index}` }>
-                {index + 1}
-              </td>
-              <td data-testid={ `${dtId}-name-${index}` }>
-                {user.name}
-              </td>
-              <td data-testid={ `${dtId}-email-${index}` }>
-                {user.email}
-              </td>
-              <td data-testid={ `${dtId}-role-${index}` }>
-                {user.role}
-              </td>
-              <td>
-                <button
-                  type="button"
-                  onClick={ () => deleteUser(user.id) }
-                  data-testid={ `${dtId}-remove-${index}` }
-                >
-                  Excluir
-                </button>
-              </td>
-            </tr>
-          )) }
-        </tbody>
-      </table>
+      <ManagementUsersTable
+        users={ usersList }
+        deleteUser={ deleteUser }
+      />
     </>
   );
 }

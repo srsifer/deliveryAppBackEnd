@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
+import SellerOrderDetailsTable from '../../components/sellers/SellerOrderDetailsTable';
 import { getOrderById } from '../../services/apiCalls';
 import socket from '../../utils/socketClient';
 
@@ -35,6 +36,7 @@ export default function OrderDetails() {
   };
 
   const datId = 'seller_order_details__element-order';
+
   return (
     <div>
       <Navbar />
@@ -76,50 +78,7 @@ export default function OrderDetails() {
           Saiu para entrega
         </button>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Item</th>
-            <th>Descrição</th>
-            <th>Quantidade</th>
-            <th>valor Unitarío</th>
-            <th>Sub-total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            products.map((product, index) => (
-              <tr key={ index }>
-                <td
-                  data-testid={ `${datId}-table-item-number-${index}` }
-                >
-                  {index + 1}
-                </td>
-                <td
-                  data-testid={ `${datId}-table-name-${index}` }
-                >
-                  {product.name}
-                </td>
-                <td
-                  data-testid={ `${datId}-table-quantity-${index}` }
-                >
-                  {product.salesProducts.quantity}
-                </td>
-                <td
-                  data-testid={ `${datId}-table-unit-price-${index}` }
-                >
-                  {product.price.replace('.', ',')}
-                </td>
-                <td
-                  data-testid={ `${datId}-table-sub-total-${index}` }
-                >
-                  {(Number(product.price) * (product.salesProducts.quantity)).toFixed(2) }
-                </td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
+      <SellerOrderDetailsTable products={ products } datId={ datId } />
       <p data-testid={ `${datId}-total-price` }>
         {
           `Total: ${Number(order.totalPrice)

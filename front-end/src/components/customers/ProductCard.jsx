@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {
   changeSubtotalList,
   createSubtotalList,
-  updateTotalPrice } from '../redux/slice/productCart';
+  updateTotalPrice } from '../../redux/slice/productCart';
 
 export default function ProductCard(product) {
   const dispatch = useDispatch();

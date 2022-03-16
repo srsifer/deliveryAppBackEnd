@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import CheckoutTable from '../../components/customers/CheckoutTable';
 import NavBar from '../../components/Navbar';
-import TableBody from '../../components/TableBody';
-import TableHead from '../../components/TableHead';
+
 import { createOrder, getSellers } from '../../services/apiCalls';
 
 export default function Checkout() {
@@ -59,13 +59,7 @@ export default function Checkout() {
 
       <NavBar />
       <h2>Finalizar pedido</h2>
-      <table>
-        <TableHead />
-        {
-          productsSold.map((product, index) => (
-            <TableBody product={ product } key={ index } index={ index } />))
-        }
-      </table>
+      <CheckoutTable productsSold={ productsSold } />
       Total:
       <div
         data-testid="customer_checkout__element-order-total-price"
