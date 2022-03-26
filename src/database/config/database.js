@@ -19,10 +19,8 @@ const options = {
   password: process.env.MYSQL_PASSWORD || 'password',
   dialect: 'postgres',
   native: true,
-  ssl: true,
   dialectOptions: {
     timezone: 'Z',
-    ssl: true
   },
   logging: false,
 };
