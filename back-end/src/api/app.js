@@ -19,6 +19,8 @@ app.use(cors());
 
 app.use(express.json());
 
+app.use(express.static('public/build'));
+
 app.get('/images/:name', async (req, res, _next) => {
     const { name } = req.params;
     res.sendFile(path.join(__dirname, '../../public/images', name));
@@ -29,6 +31,12 @@ app.use(root);
 require('../sockets/saleStatus')(io);
 
 app.use(errorHandler);
+
+const pathToBuild = path.join(__dirname, '../../public/build');
+
+app.use((req, res, _next) => {
+  res.sendFile(path.join(pathToBuild, 'index.html'));
+});
 
 http.listen(port);
 console.log(`Api rodando na porta ${port}`);
