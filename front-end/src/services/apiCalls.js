@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {serverUrl} from '../utils/dinamcsRoutes'
+import { serverUrl } from '../utils/dinamcsRoutes'
 
 async function apiLogin(user) {
   try {
