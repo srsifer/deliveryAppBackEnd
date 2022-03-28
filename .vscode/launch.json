@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "command": "npm start",
+            "name": "roda personal",
+            "request": "launch",
+            "type": "node-terminal",
+            "runtimeExecutable": "node"
+        },
+    ]
+}
