@@ -40,3 +40,6 @@ app.use((req, res, _next) => {
 
 http.listen(port);
 console.log(`Api rodando na porta ${port}`);
+
+//referencia de como conectar o front com o no conceito mvc, pull request grupo 19 turmar 11
+//src 'https://github.com/eduardobonizio/sd-010-b-project-delivery-app/tree/main-group-19-heroku-back-end'
