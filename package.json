@@ -18,7 +18,9 @@
         "test": "jest --runInBand --detectOpenHandles --forceExit --verbose",
         "test:dev": "NODE_ENV=development npm run jest -- --runInBand --detectOpenHandles --forceExit --verbose",
         "test:dev:open": "NODE_ENV=development HEADLESS=false npm run test:dev",
-        "test:dev:report": "./__tests__/reports/generate.sh"
+        "test:dev:report": "./__tests__/reports/generate.sh",
+        "build:noinstall": "cd ./back-end/public && rm -rf build/ && cd ../../front-end && npm run build && cp -R ./build .././back-end/public && cd .././back-end",
+        "build:full": "cd ./back-end/public && rm -rf build/ && cd ../../front-end && npm install && npm run build && cp -R ./build .././back-end/public && cd .././back-end && npm install"
     },
     "repository": {
         "type": "git",

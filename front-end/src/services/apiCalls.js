@@ -1,8 +1,9 @@
 import axios from 'axios';
+import {serverUrl} from '../utils/dinamcsRoutes'
 
 async function apiLogin(user) {
   try {
-    const url = 'http://localhost:3001/login';
+    const url = `http://${serverUrl}/login`;
 
     const fetchApi = await axios.post(url, user);
     const response = await fetchApi.data;
@@ -15,7 +16,7 @@ async function apiLogin(user) {
 
 async function apiRegister(newUser) {
   try {
-    const url = 'http://localhost:3001/register';
+    const url = `http://${serverUrl}/register`;
 
     const fetchApi = await axios.post(url, newUser);
     const response = await fetchApi.data;
@@ -29,7 +30,7 @@ async function apiRegister(newUser) {
 const getProducts = async () => {
   try {
     const { token } = JSON.parse(localStorage.getItem('user'));
-    const url = 'http://localhost:3001/customer/products';
+    const url = `http://${serverUrl}/customer/products`;
     const config = {
       headers: {
         authorization: token,
@@ -48,7 +49,7 @@ const getProducts = async () => {
 const getOrdersByUser = async () => {
   try {
     const { id, token } = JSON.parse(localStorage.getItem('user'));
-    const url = `http://localhost:3001/customer/order/${id}`;
+    const url = `http://${serverUrl}/customer/order/${id}`;
     const config = {
       headers: {
         authorization: token,
@@ -67,7 +68,7 @@ const getOrdersByUser = async () => {
 const getOrderById = async (id) => {
   try {
     const { token } = JSON.parse(localStorage.getItem('user'));
-    const url = `http://localhost:3001/customer/order/sales/${id}`;
+    const url = `http://${serverUrl}/customer/order/sales/${id}`;
     const config = {
       headers: {
         authorization: token,
@@ -86,7 +87,7 @@ const getOrderById = async (id) => {
 const getSellers = async () => {
   try {
     const { token } = JSON.parse(localStorage.getItem('user'));
-    const url = 'http://localhost:3001/register';
+    const url = `http://${serverUrl}/register`;
     const config = {
       headers: {
         authorization: token,
@@ -104,7 +105,7 @@ const getSellers = async () => {
 const createOrder = async (order) => {
   try {
     const { token } = JSON.parse(localStorage.getItem('user'));
-    const url = 'http://localhost:3001/customer/order';
+    const url = `http://${serverUrl}/customer/order`;
     const config = {
       headers: {
         authorization: token,
@@ -123,7 +124,7 @@ const createOrder = async (order) => {
 const apiRegisterByAdmin = async (newUser) => {
   try {
     const { token } = JSON.parse(localStorage.getItem('user'));
-    const url = 'http://localhost:3001/adminRegister';
+    const url = `http://${serverUrl}/adminRegister`;
     const config = {
       headers: {
         authorization: token,
@@ -141,7 +142,7 @@ const apiRegisterByAdmin = async (newUser) => {
 const getUsers = async () => {
   try {
     const { token } = JSON.parse(localStorage.getItem('user'));
-    const url = 'http://localhost:3001/adminRegister';
+    const url = `http://${serverUrl}/adminRegister`;
     const config = {
       headers: {
         authorization: token,
@@ -160,7 +161,7 @@ const getUsers = async () => {
 const removeUser = async (id) => {
   try {
     const { token } = JSON.parse(localStorage.getItem('user'));
-    const url = `http://localhost:3001/adminRegister/${id}`;
+    const url = `http://${serverUrl}/adminRegister/${id}`;
     const config = {
       headers: {
         authorization: token,

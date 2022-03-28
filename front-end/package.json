@@ -1,6 +1,7 @@
 {
     "name": "delivery-app-back-end",
     "version": "0.1.0",
+    "homepage": "./",
     "description": "Front-end do projeto App de Delivery",
     "engines": {
         "node": ">=14.0.0"
