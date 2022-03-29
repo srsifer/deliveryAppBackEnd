@@ -4,7 +4,8 @@ import { serverUrl } from '../utils/dinamcsRoutes'
 async function apiLogin(user) {
   try {
     const url = `http://${serverUrl}/login`;
-
+    
+    console.log(serverUrl)
     const fetchApi = await axios.post(url, user);
     const response = await fetchApi.data;
 
@@ -49,6 +50,7 @@ const getProducts = async () => {
 const getOrdersByUser = async () => {
   try {
     const { id, token } = JSON.parse(localStorage.getItem('user'));
+    console.log(serverUrl)
     const url = `http://${serverUrl}/customer/order/${id}`;
     const config = {
       headers: {
