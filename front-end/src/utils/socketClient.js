@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client';
 
-const client = io('http://localhost:3001');
+const client = io('https://in-tregasbackend.herokuapp.com');
 
 export default client;
