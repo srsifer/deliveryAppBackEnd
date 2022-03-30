@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const environment = process.env.NODE_ENV || "test";
+const environment = process.env.DATABASE_URL || "test";
 
 const suffix = {
   prod: "",
@@ -17,10 +17,8 @@ const options = {
     `${process.env.MYSQL_DB_NAME || 'delivery-app'}${suffix[environment] || suffix.test}`,
   username: process.env.MYSQL_USER || 'root',
   password: process.env.MYSQL_PASSWORD || 'password',
-  dialect: 'mysql',
-  dialectOptions: {
-    timezone: 'Z',
-  },
+  dialect: 'PostgreSQL',
+  native: true,
   logging: false,
 };
 
