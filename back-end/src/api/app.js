@@ -15,9 +15,9 @@ const io = require('socket.io')(http, {
 const root = require('../controllers/root');
 const { errorHandler } = require('../middlewares');
 
-app.use(cors());
-
 app.use(express.json());
+
+app.use(cors());
 
 app.use(express.static('public/build'));
 

@@ -11,7 +11,7 @@ const JWT_SECRET = fs.readFileSync(archive, {
 }).trim() || 'grupo21senhasecreta';
 
 const JWT_CONFIG = {
-  expiresIn: '30m',
+  expiresIn: '2h',
   algorithm: 'HS256',
 };
 
