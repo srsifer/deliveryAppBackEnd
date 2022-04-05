@@ -8,7 +8,7 @@ const http = require('http').createServer(app);
 
  const io = require('socket.io')(http, {
     cors: {
-      origin: 'https://in-tregasdelivery.herokuapp.com/', // url aceita pelo cors
+      origin: '*', // url aceita pelo cors
       methods: ['GET', 'POST'], // Métodos aceitos pela url
     } });
 const root = require('../controllers/root');
