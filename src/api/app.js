@@ -28,6 +28,6 @@ app.use(root);
 require('../sockets/saleStatus')(io); 
 
 app.use(errorHandler);
-
+// coment 
 http.listen(port);
 console.log(`Api rodando em porta: ${port}`);
