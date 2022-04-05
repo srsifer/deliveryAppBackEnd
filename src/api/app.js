@@ -7,10 +7,10 @@ const app = express();
 const http = require('http').createServer(app);
 
  const io = require('socket.io')(http, {
-    /* cors: {
-      origin: ['http://localhost:3000', 'https://in-tregasdelivery.herokuapp.com/'], // url aceita pelo cors
+    cors: {
+      origin: 'https://in-tregasdelivery.herokuapp.com/', // url aceita pelo cors
       methods: ['GET', 'POST'], // Métodos aceitos pela url
-    } */ });
+    } });
 const root = require('../controllers/root');
 const { errorHandler } = require('../middlewares');
 
