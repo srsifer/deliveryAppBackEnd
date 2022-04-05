@@ -7,10 +7,10 @@ const app = express();
 const http = require('http').createServer(app);
 
  const io = require('socket.io')(http, {
-    cors: {
+    /* cors: {
       origin: ['http://localhost:3000', 'https://in-tregasdelivery.herokuapp.com/'], // url aceita pelo cors
       methods: ['GET', 'POST'], // Métodos aceitos pela url
-    } });
+    } */ });
 const root = require('../controllers/root');
 const { errorHandler } = require('../middlewares');
 
@@ -28,6 +28,6 @@ app.use(root);
 require('../sockets/saleStatus')(io); 
 
 app.use(errorHandler);
-// coment 
+// coment git add .
 http.listen(port);
 console.log(`Api rodando em porta: ${port}`);
