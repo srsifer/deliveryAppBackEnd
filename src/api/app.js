@@ -20,6 +20,7 @@ app.use(express.json());
 
 app.get('/images/:name', async (req, res, _next) => {
     const { name } = req.params;
+    console.log(name);
     res.sendFile(path.join(__dirname, '../../public/images', name));
 });
 
