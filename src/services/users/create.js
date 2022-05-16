@@ -20,11 +20,10 @@ module.exports = async (user) => {
         return ALREADY_REGISTERED;
     }
 
-    const userWithHash = { ...user, password: passwordHash };
-
-  const token = genToken(userWithHash);
-
     const newRegister = await Models.users.create({ name, email, password: passwordHash, role });
+
+    const token = genToken(newRegister);
+    
     return { status: StatusCodes.CREATED,
         message: { token, user: newRegister.dataValues } };
 };
