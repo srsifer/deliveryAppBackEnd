@@ -4,7 +4,7 @@ module.exports = {
       [
         {
           id: 1,
-          name: 'Skol Lata 250ml',
+          name: 'Skol Lata 350ml',
           price: 2.20,
           url_image: 'https://in-tregasbackend.herokuapp.com/images/skol_lata_350ml.jpg',
         },
