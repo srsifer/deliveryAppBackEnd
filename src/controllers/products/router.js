@@ -10,6 +10,6 @@ const router = express.Router({ mergeParams: true });
 
 router.get('/', rescue(auth), rescue(list));
 router.get('/:id', rescue(auth), rescue(getById));
-router.get('/images/:name', rescue(auth), rescue(getImageUrl));
+router.get('/images/:name', rescue(getImageUrl));
 
 module.exports = router;
