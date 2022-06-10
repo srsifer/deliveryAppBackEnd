@@ -4,7 +4,7 @@ const registerSchema = Joi.object({
   name: Joi.string().min(12).required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
-  role: Joi.string(),
+  role: Joi.string().required(),
 });
 
 const validationError = (user) => registerSchema.validate(user).error;
